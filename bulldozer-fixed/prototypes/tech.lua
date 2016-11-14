@@ -3,7 +3,7 @@ data:extend(
   {
     type = "technology",
     name = "bulldozer",
-    icon = "__bulldozer__/graphics/icons/bulldozer.png",
+    icon = "__bulldozer-fixed__/graphics/icons/bulldozer.png",
     effects =
     {
       {

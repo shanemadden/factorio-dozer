@@ -3,7 +3,7 @@ data:extend(
   {
     type = "car",
     name = "bulldozer",
-    icon = "__bulldozer__/graphics/icons/bulldozer.png",
+    icon = "__bulldozer-fixed__/graphics/icons/bulldozer.png",
     flags = {"pushable", "placeable-neutral", "player-creation"},
     minable = {mining_time = 1, result = "bulldozer"},
     max_health = 1500,
@@ -112,22 +112,22 @@ data:extend(
           stripes =
           {
             {
-             filename = "__bulldozer__/graphics/entity/bulldozer/base-1.png",
+             filename = "__bulldozer-fixed__/graphics/entity/bulldozer/base-1.png",
              width_in_frames = 2,
              height_in_frames = 16,
             },
             {
-             filename = "__bulldozer__/graphics/entity/bulldozer/base-2.png",
+             filename = "__bulldozer-fixed__/graphics/entity/bulldozer/base-2.png",
              width_in_frames = 2,
              height_in_frames = 16,
             },
             {
-             filename = "__bulldozer__/graphics/entity/bulldozer/base-3.png",
+             filename = "__bulldozer-fixed__/graphics/entity/bulldozer/base-3.png",
              width_in_frames = 2,
              height_in_frames = 16,
             },
             {
-             filename = "__bulldozer__/graphics/entity/bulldozer/base-4.png",
+             filename = "__bulldozer-fixed__/graphics/entity/bulldozer/base-4.png",
              width_in_frames = 2,
              height_in_frames = 16,
             }
@@ -146,17 +146,17 @@ data:extend(
           stripes = util.multiplystripes(2,
           {
             {
-              filename = "__bulldozer__/graphics/entity/bulldozer/base-mask-1.png",
+              filename = "__bulldozer-fixed__/graphics/entity/bulldozer/base-mask-1.png",
               width_in_frames = 1,
               height_in_frames = 22,
             },
             {
-              filename = "__bulldozer__/graphics/entity/bulldozer/base-mask-2.png",
+              filename = "__bulldozer-fixed__/graphics/entity/bulldozer/base-mask-2.png",
               width_in_frames = 1,
               height_in_frames = 22,
             },
             {
-              filename = "__bulldozer__/graphics/entity/bulldozer/base-mask-3.png",
+              filename = "__bulldozer-fixed__/graphics/entity/bulldozer/base-mask-3.png",
               width_in_frames = 1,
               height_in_frames = 20,
             },
