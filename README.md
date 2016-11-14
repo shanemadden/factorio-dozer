@@ -4,8 +4,6 @@ This mod allows a player to demolish items at an astounding rate.  The main func
 
 ## Notes, etc
 
-This mod does **REQUIRE** ckhawks Bulldozer as well (Disabled).  Due to the fact that the naming hasn't been ported over entirely yet.  And if you fail to do so, you will get image not found errors.
-
 DO NOT RUN A PLAYER OVER WITH DEATHCHEST INSTALLED.  I cannot stress that enough; YOU WILL CRASH THE SERVER! (Saves un-affected, upon restart you will go to the last save available.)
 
 
