@@ -56,7 +56,7 @@ local blacklisttype = {
     ["unit-spawner"]=true, player=true, decorative=true, resource=true, smoke=true, explosion=true,
     corpse=true, particle=true, ["flying-text"]=true, projectile=true, ["particle-source"]=true, turret=true,
     sticker=true, ["logistic-robot"] = true, ["combat-robot"]=true, ["construction-robot"]=true, projectile=true, ["ghost"]=true,
-    ["entity-ghost"]=true, ["leaf-particle"]=true
+    ["entity-ghost"]=true, ["leaf-particle"]=true, ["death-chest"]=true
   }
   
   local blacklistname = {
