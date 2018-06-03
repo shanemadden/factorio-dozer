@@ -1,152 +1,91 @@
-require "Settings"
-require "bulldozer"
-require "GUI"
+local lib = require('lib')
 
-remote.add_interface("bulldozer",{})
-
-defaultSettings = {
-    collect = true
-  }
-  
-removeStone = true
-
-  function resetMetatable(o, mt)
-    setmetatable(o,{__index=mt})
-    return o
-  end
-
-  local function onTick(event)
-    if event.tick % 10 == 0  then
-      for pi, player in pairs(game.players) do
-        if (player.vehicle ~= nil and player.vehicle.name == "bulldozer") then
-          if player.gui.left.bull == nil then
-            BULL.onPlayerEnter(player)
-            GUI.createGui(player)
+local function on_player_changed_position(event)
+  local player = game.players[event.player_index]
+  local dozer = player.vehicle
+  if dozer and dozer.name == 'bulldozer' and dozer.speed > 0 then
+    local dozer_inv = dozer.get_inventory(defines.inventory.car_trunk)
+    local area = lib.adjust_area(dozer.bounding_box, dozer.orientation)
+    for _, ent in pairs(dozer.surface.find_entities_filtered {area = area, type = 'resource', invert = true}) do
+      if ent.valid and ent.type ~= 'player' and ent.type ~= 'car' then
+        if ent.type == 'cliff' then
+          ent.destroy(true)
+        elseif ent.minable then
+          if dozer_inv.can_insert('raw-fish') then
+            player.surface.play_sound({
+              position = player.position,
+              path = 'utility/axe_mining_ore',
+              volume_modifier = 0.3,
+            })
+            player.mine_entity(ent)
+          else
+            player.print({'bulldozer.full'})
           end
         end
-        if player.vehicle == nil and player.gui.left.bull ~= nil then
-          BULL.onPlayerLeave(player)
-          GUI.destroyGui(player)
-        end
-      end
-    end
-    for i, bull in ipairs(global.bull) do
-	  --if not bull then
-		  bull:collect(event)
-		  if bull.driver and bull.driver.name ~= "bull_player" then
-			GUI.updateGui(bull)
-		  end
-	  --end
-    end
-  end
-  
-  local function onGuiClick(event)
-    local index = event.player_index or event.name
-    local player = game.players[index]
-    if player.gui.left.bull ~= nil then
-      local bull = BULL.findByPlayer(player)
-      if bull then
-        GUI.onGuiClick(event, bull, player)
-      else
-        player.print("Gui without bulldozer, wrooong!")
-        GUI.destroyGui(player)
       end
     end
   end
-  
-  function on_preplayer_mined_item(event)
-    local ent = event.entity
-    local cname = ent.name
-    if ent.type == "car" and cname == "bulldozer" then
-      for i=1,#global.bull do
-        if global.bull[i].vehicle == ent then
-          global.bull[i].delete = true
-        end
-      end
-    end
-  end
+end
+script.on_event(defines.events.on_player_changed_position, on_player_changed_position)
 
-  function on_player_mined_item(event)
-    if event.item_stack.name == "bulldozer" then
-      for i=#global.bull,1,-1 do
-        if global.bull[i].delete then
-          table.remove(global.bull, i)
-        end
+local function on_player_mined_entity(event)
+  local player = game.players[event.player_index]
+  local dozer = player.vehicle
+  if dozer and dozer.name == 'bulldozer' and dozer.speed > 0 then
+    local dozer_inv = dozer.get_inventory(defines.inventory.car_trunk)
+    for name, count in pairs(event.buffer.get_contents()) do
+      if dozer_inv.can_insert({name = name, count = count}) then
+        event.buffer.remove({name = name, count = dozer_inv.insert({name = name, count = count})})
       end
     end
   end
-  
-  local function on_player_created(event)
-    local player = game.players[event.player_index]
-    local gui = player.gui
-    if gui.top.bull ~= nil then
-      gui.top.bull.destroy()
-    end
-  end
+end
+script.on_event(defines.events.on_player_mined_entity, on_player_mined_entity)
 
-  script.on_event(defines.events.on_player_created, on_player_created)
-  
-  local function initGlob()
-    if global.version == nil or global.version < "0.0.1" then
-      global = {}
-      global.settings = {}
-      global.version = "0.0.1"
-    end
-    if remote.interfaces["roadtrain"] then
-      remote.call("roadtrain","settowbar","bulldozer",true)
-      remote.call("roadtrain","settowbar","car",false)
-    end
-    global.players = global.players or {}
-    global.bull = global.bull or {}
-    -- global.players={}
-    
-    if global.version < "1.0.4" then
-      for pi, player in pairs(game.players) do
-        local settings = Settings.loadByPlayer(player)
-        settings = resetMetatable(settings,Settings)
-        settings:update(util.table.deepcopy(stg))
-      end
-    end
-    for i,bull in ipairs(global.bull) do
-      bull = resetMetatable(bull, BULL)
-      bull.index = nil
-    end
-    for name, s in pairs(global.players) do
-      s = resetMetatable(s,Settings)
-    end
-    global.version = "1.0.4"
-  end
-  
-  local function on_init() initGlob() end
-
-  local function on_load()
-    initGlob()
-  end
-  
-  local function on_entity_died(event)
-    if event.entity.name == "bulldozer" then
-      for i=#global.bull,1,-1 do
-        if event.entity == global.bull[i].vehicle then
-          if global.bull[i].driver then
-
-          	-- removed because gui is automatically removed. this caused errors.
-            --local gui = player.gui
-            --if gui.top.bull ~= nil then
-            --  gui.top.bull.destroy()
-            --end
+local inventories_to_clear = {
+  defines.inventory.fuel,
+  defines.inventory.burnt_result,
+  defines.inventory.chest,
+  defines.inventory.furnace_source,
+  defines.inventory.furnace_result,
+  defines.inventory.furnace_modules,
+  defines.inventory.player_quickbar,
+  defines.inventory.roboport_robot,
+  defines.inventory.roboport_material,
+  defines.inventory.robot_cargo,
+  defines.inventory.robot_repair,
+  defines.inventory.assembling_machine_input,
+  defines.inventory.assembling_machine_output,
+  defines.inventory.assembling_machine_modules,
+  defines.inventory.lab_input,
+  defines.inventory.lab_modules,
+  defines.inventory.mining_drill_modules,
+  defines.inventory.rocket_silo_rocket,
+  defines.inventory.rocket_silo_result,
+  defines.inventory.rocket,
+  defines.inventory.car_trunk,
+  defines.inventory.car_ammo,
+  defines.inventory.cargo_wagon,
+  defines.inventory.turret_ammo,
+  defines.inventory.beacon_modules,
+  defines.inventory.character_corpse,
+}
+local function on_pre_player_mined_item(event)
+  local player = game.players[event.player_index]
+  local dozer = player.vehicle
+  if dozer and dozer.name == 'bulldozer' and dozer.speed > 0 then
+    local entity = event.entity
+    local dozer_inv = dozer.get_inventory(defines.inventory.car_trunk)
+    for _, inventory_id in ipairs(inventories_to_clear) do
+      local inventory = entity.get_inventory(inventory_id)
+      if inventory and inventory.valid and not inventory.is_empty() then
+        for name, count in pairs(inventory.get_contents()) do
+          if dozer_inv.can_insert({name = name, count = count}) then
+            inventory.remove({name = name, count = dozer_inv.insert({name = name, count = count})})
           end
-          table.remove(global.bull, i)
         end
       end
     end
   end
-  
-  script.on_init(on_init)
-  script.on_load(on_load)
-  script.on_configuration_changed(on_load)
-  script.on_event(defines.events.on_tick, onTick)
-  script.on_event(defines.events.on_gui_click, onGuiClick)
-  script.on_event(defines.events.on_player_mined_item, on_player_mined_item)
-  script.on_event(defines.events.on_preplayer_mined_item, on_preplayer_mined_item)
-  script.on_event(defines.events.on_built_entity, on_built_entity)
-  script.on_event(defines.events.on_entity_died, on_entity_died)
+end
+script.on_event(defines.events.on_pre_player_mined_item, on_pre_player_mined_item)
