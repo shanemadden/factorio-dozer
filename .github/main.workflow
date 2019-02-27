@@ -5,5 +5,4 @@ workflow "Publish" {
 
 action "shanemadden/factorio-mod-portal-publish@master" {
   uses = "shanemadden/factorio-mod-portal-publish@master"
-  secrets = ["FACTORIO_USER", "FACTORIO_PASSWORD"]
 }
