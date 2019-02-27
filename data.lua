@@ -168,7 +168,7 @@ local item = {
   name = 'bulldozer',
   icon = '__dozer__/graphics/icons/bulldozer.png',
   icon_size = 32,
-  flags = {'goes-to-quickbar'},
+  flags = {},
   subgroup = 'transport',
   order = 'b[personal-transport]-c[bulldozer]',
   place_result = 'bulldozer',
@@ -204,9 +204,9 @@ local tech = {
   unit = {
     count = 150,
     ingredients = {
-      {'science-pack-1', 1},
-      {'science-pack-2', 1},
-      {'science-pack-3', 1},
+      {'automation-science-pack', 1},
+      {'logistic-science-pack', 1},
+      {'chemical-science-pack', 1},
     },
     time = 20
   },
