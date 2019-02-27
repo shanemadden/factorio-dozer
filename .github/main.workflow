@@ -1,9 +1,9 @@
-workflow "Publish mod to portal" {
+workflow "Publish" {
   on = "push"
-  resolves = ["shanemadden/factorio-mod-portal-publish@master"]
+  resolves = ["shanemadden/factorio-mod-portal-publish"]
 }
 
-action "shanemadden/factorio-mod-portal-publish@master" {
+action "shanemadden/factorio-mod-portal-publish" {
   uses = "shanemadden/factorio-mod-portal-publish@master"
-  secrets = ["FACTORIO_USER", "FACTORIO_PASSWORD"]
+  secrets = ["FACTORIO_PASSWORD", "FACTORIO_USER"]
 }
