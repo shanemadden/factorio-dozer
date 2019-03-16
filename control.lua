@@ -28,6 +28,7 @@ local function on_player_changed_position(event)
 end
 script.on_event(defines.events.on_player_changed_position, on_player_changed_position)
 
+-- TODO instead of event.buffer.get_contents() iterate stacks and transfer
 local function on_player_mined_entity(event)
   local player = game.players[event.player_index]
   local dozer = player.vehicle
