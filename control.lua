@@ -9,7 +9,7 @@ local function on_player_changed_position(event)
     for _, ent in pairs(dozer.surface.find_entities_filtered {area = area, type = 'resource', invert = true}) do
       if ent.valid and ent.type ~= 'player' and ent.type ~= 'car' then
         if ent.type == 'cliff' then
-          ent.destroy(true)
+          ent.destroy({do_cliff_correction = true})
         elseif ent.minable then
           if dozer_inv.can_insert('raw-fish') then
             player.surface.play_sound({
@@ -28,6 +28,7 @@ local function on_player_changed_position(event)
 end
 script.on_event(defines.events.on_player_changed_position, on_player_changed_position)
 
+-- TODO instead of event.buffer.get_contents() iterate stacks and transfer
 local function on_player_mined_entity(event)
   local player = game.players[event.player_index]
   local dozer = player.vehicle
