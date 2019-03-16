@@ -9,7 +9,7 @@ local function on_player_changed_position(event)
     for _, ent in pairs(dozer.surface.find_entities_filtered {area = area, type = 'resource', invert = true}) do
       if ent.valid and ent.type ~= 'player' and ent.type ~= 'car' then
         if ent.type == 'cliff' then
-          ent.destroy(true)
+          ent.destroy{do_cliff_correction=true,raise_destroy=true}
         elseif ent.minable then
           if dozer_inv.can_insert('raw-fish') then
             player.surface.play_sound({
