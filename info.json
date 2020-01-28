@@ -1,12 +1,12 @@
 {
     "name": "dozer",
-    "version": "1.4.3",
+    "version": "1.4.4",
     "title": "Dozer",
     "author": "Shane Madden",
     "homepage": "https://github.com/shanemadden/factorio-dozer",
     "description": "Update of Bulldozer mod. Original mod by Cheata, with updates and contributions from hassad, ckhawks, and amwdrizz; refactored for performance/simplicity by Nexela.",
-    "factorio_version": "0.17",
+    "factorio_version": "0.18",
     "dependencies": [
-        "base >= 0.17"
+        "base >= 0.18"
     ]
 }
