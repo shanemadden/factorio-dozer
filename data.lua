@@ -4,6 +4,7 @@ local dozer = util.table.deepcopy(data.raw['car']['tank'])
 do
   dozer.name = 'bulldozer'
   dozer.icon = '__dozer__/graphics/icons/bulldozer.png'
+  dozer.icon_size = 32
   dozer.minable = {mining_time = 1, result = 'bulldozer'}
   dozer.max_health = 1500
   dozer.energy_per_hit_point = 0.5
