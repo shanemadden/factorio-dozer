@@ -201,7 +201,7 @@ local tech = {
       recipe = 'bulldozer'
     }
   },
-  prerequisites = {'tanks'},
+  prerequisites = {'tank'},
   unit = {
     count = 150,
     ingredients = {
